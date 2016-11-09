@@ -1,10 +1,14 @@
 /**
   ******************************************************************************
-  * File Name          : main.h
-  * Description        : This file contains the common defines of the application
+  * @file    stm32f4xx_hal_flash_ramfunc.h
+  * @author  MCD Application Team
+  * @version V1.5.2
+  * @date    22-September-2016
+  * @brief   Header file of FLASH RAMFUNC driver.
   ******************************************************************************
+  * @attention
   *
-  * COPYRIGHT(c) 2016 STMicroelectronics
+  * <h2><center>&copy; COPYRIGHT(c) 2016 STMicroelectronics</center></h2>
   *
   * Redistribution and use in source and binary forms, with or without modification,
   * are permitted provided that the following conditions are met:
@@ -29,35 +33,50 @@
   * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   *
   ******************************************************************************
-  */
+  */ 
+
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __MAIN_H
-#define __MAIN_H
-  /* Includes ------------------------------------------------------------------*/
+#ifndef __STM32F4xx_FLASH_RAMFUNC_H
+#define __STM32F4xx_FLASH_RAMFUNC_H
 
-/* USER CODE BEGIN Includes */
+#ifdef __cplusplus
+ extern "C" {
+#endif
+#if defined(STM32F410Tx) || defined(STM32F410Cx) || defined(STM32F410Rx) || defined(STM32F411xE) || defined(STM32F446xx) || defined(STM32F412Zx) ||\
+    defined(STM32F412Vx) || defined(STM32F412Rx) || defined(STM32F412Cx)  
 
-/* USER CODE END Includes */
+/* Includes ------------------------------------------------------------------*/
+#include "stm32f4xx_hal_def.h"
 
-/* Private define ------------------------------------------------------------*/
+/** @addtogroup STM32F4xx_HAL_Driver
+  * @{
+  */
 
-#define KEY4_Pin GPIO_PIN_2
-#define KEY4_GPIO_Port GPIOE
-#define KEY3_Pin GPIO_PIN_3
-#define KEY3_GPIO_Port GPIOE
-#define KEY2_Pin GPIO_PIN_4
-#define KEY2_GPIO_Port GPIOE
-#define LS1_Pin GPIO_PIN_8
-#define LS1_GPIO_Port GPIOF
-#define LED5_Pin GPIO_PIN_9
-#define LED5_GPIO_Port GPIOF
-#define LED6_Pin GPIO_PIN_10
-#define LED6_GPIO_Port GPIOF
-#define KEY1_Pin GPIO_PIN_0
-#define KEY1_GPIO_Port GPIOA
-/* USER CODE BEGIN Private defines */
+/** @addtogroup FLASH_RAMFUNC
+  * @{
+  */
 
-/* USER CODE END Private defines */
+/* Exported types ------------------------------------------------------------*/
+/* Exported macro ------------------------------------------------------------*/
+/* Exported functions --------------------------------------------------------*/
+/** @addtogroup FLASH_RAMFUNC_Exported_Functions
+  * @{
+  */
+
+/** @addtogroup FLASH_RAMFUNC_Exported_Functions_Group1
+  * @{
+  */   
+__RAM_FUNC HAL_FLASHEx_StopFlashInterfaceClk(void);
+__RAM_FUNC HAL_FLASHEx_StartFlashInterfaceClk(void);
+__RAM_FUNC HAL_FLASHEx_EnableFlashSleepMode(void);
+__RAM_FUNC HAL_FLASHEx_DisableFlashSleepMode(void);
+/**
+  * @}
+  */ 
+
+/**
+  * @}
+  */
 
 /**
   * @}
@@ -65,7 +84,14 @@
 
 /**
   * @}
-*/ 
+  */
 
-#endif /* __MAIN_H */
+#endif /* STM32F410xx || STM32F411xE || STM32F446xx || STM32F412Zx || STM32F412Vx || STM32F412Rx || STM32F412Cx */  
+#ifdef __cplusplus
+}
+#endif
+
+
+#endif /* __STM32F4xx_FLASH_RAMFUNC_H */
+
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -15,6 +15,9 @@ SYS	SysTick	SYS_VS_Systick	VP_SYS_VS_Systick
 
 
 Pin Nb	PINs	FUNCTIONs	LABELs
+1	PE2	GPIO_Input	KEY4
+2	PE3	GPIO_Input	KEY3
+3	PE4	GPIO_Input	KEY2
 8	PC14-OSC32_IN	RCC_OSC32_IN	
 9	PC15-OSC32_OUT	RCC_OSC32_OUT	
 20	PF8	GPIO_Output	LS1
@@ -22,6 +25,7 @@ Pin Nb	PINs	FUNCTIONs	LABELs
 22	PF10	GPIO_Output	LED6
 23	PH0-OSC_IN	RCC_OSC_IN	
 24	PH1-OSC_OUT	RCC_OSC_OUT	
+34	PA0-WKUP	GPIO_Input	KEY1
 
 
 
@@ -29,13 +33,13 @@ SOFTWARE PROJECT
 
 Project Settings : 
 Project Name : ex2-1 single button
-Project Folder : D:\Works\M4_HAL_Works\ex2-1 single button
+Project Folder : D:\Git_Repository\GitHub\M4_HAL_Works\ex2-1 single button
 Toolchain / IDE : MDK-ARM V5
 Firmware Package Name and Version : STM32Cube FW_F4 V1.13.1
 
 
 Code Generation Settings : 
-STM32Cube Firmware Library Package : Add necessary library files as reference in the toolchain project configuration file
+STM32Cube Firmware Library Package : Copy only the necessary library files
 Generate peripheral initialization as a pair of '.c/.h' files per peripheral : Yes
 Backup previously generated files when re-generating : No
 Delete previously generated files when not re-generated : Yes

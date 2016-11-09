@@ -36,7 +36,19 @@
 #include "gpio.h"
 
 /* USER CODE BEGIN Includes */
-
+/*****************************************************************************
+@File name:  
+@Description: 按键KEY1开关LED5,LED6 
+@Author: Harry Wu
+@Version: V1.0
+@Date: 2016-11-9
+@History: 
+		V1.0: 用STM32CubeMX生成代码,调用HAL库
+		
+*****************************************************************************/
+#include "MyTypeDef.h"
+#include "key.h"
+#include "led.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -63,7 +75,8 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-
+	u8 key;
+	//硬件初始化
   /* USER CODE END 1 */
 
   /* MCU Configuration----------------------------------------------------------*/
@@ -86,9 +99,23 @@ int main(void)
   while (1)
   {
   /* USER CODE END WHILE */
-
+	
   /* USER CODE BEGIN 3 */
-
+	key = key_scanf();
+		if(key != NO_KEY)
+		{
+			if(LED5)  //LED是否是灭的
+			{
+				LED5 = 0;  //LED ON
+				LED6 = 0;  //LED ON
+			}
+			else
+			{
+				LED5 = 1;  //LED OFF
+				LED6 = 1;  //LED OFF
+			}
+			
+		}
   }
   /* USER CODE END 3 */
 

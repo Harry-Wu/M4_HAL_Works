@@ -1,6 +1,6 @@
 #include "stm32f4xx.h"
 #include "key.h"
-#include "delay.h"
+#include "MyTypeDef.h"
 
 void key_init(void)
 {
@@ -13,10 +13,11 @@ void key_init(void)
 
 u8 key_scanf(void)
 {
+	//uint32_t i;
 	u8 key = NO_KEY;
 	if(KEY1)  //如果识别为高电平
 	{
-		delay_ms(10);  //延时消抖
+		HAL_Delay(10);  //延时消抖
 		if(KEY1)  //再次判断是否为高电平
 		{
 			key = KEY1_OK;
