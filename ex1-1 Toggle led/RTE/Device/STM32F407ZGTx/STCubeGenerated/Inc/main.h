@@ -41,12 +41,12 @@
 
 /* Private define ------------------------------------------------------------*/
 
-#define LS1_Pin GPIO_PIN_8
-#define LS1_GPIO_Port GPIOF
-#define D5_Pin GPIO_PIN_9
-#define D5_GPIO_Port GPIOF
-#define D6_Pin GPIO_PIN_10
-#define D6_GPIO_Port GPIOF
+#define BUZZER1_Pin GPIO_PIN_8
+#define BUZZER1_GPIO_Port GPIOF
+#define LED5_Pin GPIO_PIN_9
+#define LED5_GPIO_Port GPIOF
+#define LED6_Pin GPIO_PIN_10
+#define LED6_GPIO_Port GPIOF
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
