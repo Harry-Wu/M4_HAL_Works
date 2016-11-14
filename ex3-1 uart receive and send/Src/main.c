@@ -41,10 +41,11 @@
 @File name:  
 @Description: uart1接口将PC接收到的数据再通过uart发回给pc 
 @Author: Harry Wu
-@Version: V1.0
+@Version: V1.1
 @Date: 2016-11-14
 @History: 
 		V1.0: 用轮询方式收发数据,按键没法起作用.
+		V1.1: printf重定向到uart1,可以使用printf了.目前只能一次接收一个字符.
 		
 *****************************************************************************/
 #include "MyTypeDef.h"
@@ -116,7 +117,9 @@ int main(void)
 	//rec_data=USART_ReceiveData (USART1); //读取数据
 	while(__HAL_UART_GET_FLAG(&huart1, UART_FLAG_TC)==RESET) LED6 = 0;
 	//while(USART_GetFlagStatus(USART1,USART_FLAG_TXE)==RESET); //等待上次发送完毕
+	printf("\r\n您发送的消息为:\r\n");
 	HAL_UART_Transmit(&huart1,&rec_data,1,100);      //发送数据
+	
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
