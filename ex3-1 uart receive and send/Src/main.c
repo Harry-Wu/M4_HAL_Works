@@ -41,11 +41,12 @@
 @File name:  
 @Description: uart1接口将PC接收到的数据再通过uart发回给pc 
 @Author: Harry Wu
-@Version: V1.1
-@Date: 2016-11-14
+@Version: V1.2
+@Date: 2016-11-15
 @History: 
 		V1.0: 用轮询方式收发数据,按键没法起作用.
 		V1.1: printf重定向到uart1,可以使用printf了.目前只能一次接收一个字符.
+		V1.2: 用数组保存数据,数组设为最大接收200字节, 回发上位机时根据接收到的数据长度,来决定输出多少字节数据.
 		
 *****************************************************************************/
 #include "MyTypeDef.h"
@@ -79,7 +80,8 @@ int main(void)
 
   /* USER CODE BEGIN 1 */
 	u8 key;
-	u8 rec_data;
+	#define USART_REC_LEN  			200  	//定义最大接收字节数 200
+	u8 rec_data_buf[USART_REC_LEN];
 	//u8 buff[10];
 	//硬件初始化
   /* USER CODE END 1 */
@@ -110,15 +112,15 @@ int main(void)
 	else if(key == KEY3_OK) BUZZER1 = !BUZZER1;
 
 	HAL_UART_StateTypeDef huart1_state;
-	while(__HAL_UART_GET_FLAG(&huart1, UART_FLAG_RXNE)==RESET) LED5=0;  //等待收到数据
+	while(__HAL_UART_GET_FLAG(&huart1, UART_FLAG_RXNE)==RESET);  //等待收到数据
 	//while(USART_GetFlagStatus(USART1,USART_FLAG_RXNE)==RESET);   //等待收到数据
-	HAL_UART_Receive(&huart1,&rec_data,1,100);  //收到的数据放到rec_data中
+	HAL_UART_Receive(&huart1,rec_data_buf,USART_REC_LEN,100);  //收到的数据放到rec_data中
   
 	//rec_data=USART_ReceiveData (USART1); //读取数据
-	while(__HAL_UART_GET_FLAG(&huart1, UART_FLAG_TC)==RESET) LED6 = 0;
+	while(__HAL_UART_GET_FLAG(&huart1, UART_FLAG_TC)==RESET);  //等待上次发送完毕
 	//while(USART_GetFlagStatus(USART1,USART_FLAG_TXE)==RESET); //等待上次发送完毕
 	printf("\r\n您发送的消息为:\r\n");
-	HAL_UART_Transmit(&huart1,&rec_data,1,100);      //发送数据
+	HAL_UART_Transmit(&huart1,rec_data_buf,huart1.RxXferSize-huart1.RxXferCount-1,100);      //发送数据, huart1.RxXferSize-huart1.RxXferCount-1, 根据接收到的数据长度,来决定输出多少字节数据
 	
   /* USER CODE END WHILE */
 
