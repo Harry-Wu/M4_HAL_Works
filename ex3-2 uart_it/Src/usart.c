@@ -39,6 +39,9 @@
 
 /* USER CODE BEGIN 0 */
 #include "MyTypeDef.h"
+#include "stm32f4xx_hal.h"
+
+u8 len;  //获取接收到的字节数
 u8 aRxBuffer[RXBUFFERSIZE];//HAL库USART接收Buffer
 u8 rec_data_buf[USART_REC_LEN];     //接收缓冲,最大USART_REC_LEN个字节.
 /*********接收状态*************/
@@ -161,12 +164,21 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 	if(huart->Instance==USART1)//如果是串口1
 	{
-		if((USART_RX_STA&(0x01<<15))==0)//接收未完成
+		if((USART_RX_STA&(0x01<<15))==RESET)//接收未完成
 		{
 			if(USART_RX_STA&(0x01<<14))//接收到了0x0d
 			{
 				if(aRxBuffer[0]!=0x0a) USART_RX_STA=0;//如果没接收到换行符,判为接收错误,重新开始
-				else USART_RX_STA|=0x01<<15;	//接收完成了 
+				else 
+				{
+					USART_RX_STA|=0x01<<15;	//接收完成了
+					len=USART_RX_STA&0x3fff;//得到此次接收到的数据长度
+					printf("\r\n您发送的消息为:\r\n");
+					HAL_UART_Transmit(&huart1,rec_data_buf,len,1000);	//发送接收到的数据
+					while(__HAL_UART_GET_FLAG(&huart1,UART_FLAG_TC)!=SET);		//等待发送结束
+					printf("\r\n\r\n");//插入换行
+					USART_RX_STA=0;
+				} 
 			}
 			else //还没收到0X0D
 			{	
@@ -179,14 +191,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 				}		 
 			}
 		}
-//		else if((USART_RX_STA&(0x01<<15))==SET)
-//		{
-//			
-//		}
 	}
 	
-	//printf("\r\n您发送的消息为:\r\n");
-	//HAL_UART_Transmit(&huart1,rec_data_buf,huart1.RxXferSize-huart1.RxXferCount-1,100);      //发送数据, huart1.RxXferSize-huart1.RxXferCount-1, 根据接收到的数据长度,来决定输出多少字节数据
 }
 /* USER CODE END 1 */
 

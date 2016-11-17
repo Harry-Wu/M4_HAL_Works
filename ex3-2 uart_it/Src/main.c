@@ -41,11 +41,12 @@
 @File name:  
 @Description: uart1用中断方式接收数据,再发回给pc 
 @Author: Harry Wu
-@Version: V1.0
+@Version: V1.1
 @Date: 2016-11-17
 @History: 
 		V1.0: 用中断方式接收数据,数据完成后(判断是否有回车符),将数据保存在数组中,
 		main函数中判断是否接收完成,接收完成再发送原回上位机.
+		V1.1: 把接收完成后要处理的任务放到回调函数HAL_UART_RxCpltCallback()中
 		
 *****************************************************************************/
 #include "MyTypeDef.h"
@@ -80,7 +81,7 @@ int main(void)
   /* USER CODE BEGIN 1 */
 	u8 key;
 	u16 times=0;
-	u8 len;  //获取接收到的字节数
+//	u8 len;  //获取接收到的字节数
 //	#define USART_REC_LEN  			200  	//定义最大接收字节数 200
 //	u8 rec_data_buf[USART_REC_LEN];
 	//u8 buff[10];
@@ -112,27 +113,29 @@ int main(void)
 	else if(key == KEY2_OK) LED6 = !LED6;  
 	else if(key == KEY3_OK) BUZZER1 = !BUZZER1;
 	
-	  if(USART_RX_STA&0x8000)
-		{					   
-			len=USART_RX_STA&0x3fff;//得到此次接收到的数据长度
-			printf("\r\n您发送的消息为:\r\n");
-			HAL_UART_Transmit(&huart1,rec_data_buf,len,1000);	//发送接收到的数据
-			while(__HAL_UART_GET_FLAG(&huart1,UART_FLAG_TC)!=SET);		//等待发送结束
-			printf("\r\n\r\n");//插入换行
-			USART_RX_STA=0;
-		}else
+    if(USART_RX_STA&(0x01<<15))  //如果接收完成
+	{					   
+//			len=USART_RX_STA&0x3fff;//得到此次接收到的数据长度
+//			printf("\r\n您发送的消息为:\r\n");
+//			HAL_UART_Transmit(&huart1,rec_data_buf,len,1000);	//发送接收到的数据
+//			while(__HAL_UART_GET_FLAG(&huart1,UART_FLAG_TC)!=SET);		//等待发送结束
+//			printf("\r\n\r\n");//插入换行
+//			USART_RX_STA=0;
+	}
+	//如果接收没完成,接收完成了时候需要发送数据会上位机,所以下面的任务在没完成时处理比较好
+	else  
+	{
+		times++;
+		if(times%5000==0)
 		{
-			times++;
-			if(times%5000==0)
-			{
-				printf("\r\nALIENTEK 阿波罗STM32F429开发板 串口实验\r\n");
-				printf("正点原子@ALIENTEK\r\n\r\n\r\n");
-			}
-			if(times%200==0)printf("请输入数据,以回车键结束\r\n");  
-			if(times%30==0)LED5=!LED5;//闪烁LED,提示系统正在运行.
-			HAL_Delay(10);   
-		} 
-	
+			printf("\r\n等的牙都长了\r\n");
+			//printf("正点原子@ALIENTEK\r\n\r\n\r\n");
+		}
+		if(times%200==0)printf("请输入数据,以回车键结束\r\n");  
+		if(times%30==0)LED5=!LED5;//闪烁LED,提示系统正在运行.
+		HAL_Delay(10);   
+	} 
+
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
