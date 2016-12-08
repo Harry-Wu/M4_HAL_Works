@@ -1,7 +1,7 @@
 [PreviousGenFiles]
-HeaderPath=D:/Works/M4_HAL_Works/ex4-1 spi_flash/Inc
+HeaderPath=D:/Git_Repository/GitHub/M4_HAL_Works/ex4-1 spi_flash/Inc
 HeaderFiles=gpio.h;stm32f4xx_it.h;stm32f4xx_hal_conf.h;main.h;usart.h;spi.h;
-SourcePath=D:/Works/M4_HAL_Works/ex4-1 spi_flash/Src
+SourcePath=D:/Git_Repository/GitHub/M4_HAL_Works/ex4-1 spi_flash/Src
 SourceFiles=gpio.h;stm32f4xx_it.h;stm32f4xx_hal_conf.h;main.h;gpio.c;stm32f4xx_it.c;stm32f4xx_hal_msp.c;main.c;usart.h;usart.c;spi.h;spi.c;
 
 [PreviousLibFiles]

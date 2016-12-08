@@ -121,7 +121,19 @@ void HAL_SPI_MspDeInit(SPI_HandleTypeDef* spiHandle)
 } 
 
 /* USER CODE BEGIN 1 */
+u8 SPI1_ReadWriteByte(u8 _data)
+{
 
+	while(!(SPI1->SR &(0X01<<1)));
+	SPI1->DR=_data;
+	while(!(SPI1->SR &(0X01<<0)));
+	return SPI1->DR;
+//	while(SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_TXE)==RESET);
+//	SPI_I2S_SendData  (SPI1,_data); 
+//	while(SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_RXNE)==RESET);
+//	return SPI_I2S_ReceiveData  (SPI1 ) ; 
+	
+}
 /* USER CODE END 1 */
 
 /**

@@ -53,6 +53,9 @@
 #include "key.h"
 #include "led.h"
 #include "usart.h"
+#include "flash.h"
+#include "stdio.h"
+#include "string.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -81,6 +84,8 @@ int main(void)
   /* USER CODE BEGIN 1 */
 	u8 key;
 	u16 times=0;
+	u8 *p="hello world!!! Harry\r\n";
+	u8 buf[100];
 //	u8 len;  //获取接收到的字节数
 //	#define USART_REC_LEN  			200  	//定义最大接收字节数 200
 //	u8 rec_data_buf[USART_REC_LEN];
@@ -102,7 +107,13 @@ int main(void)
   MX_SPI1_Init();
 
   /* USER CODE BEGIN 2 */
+	__HAL_SPI_ENABLE(&hspi1);
+	
   HAL_UART_Receive_IT(&huart1, (u8 *)aRxBuffer, RXBUFFERSIZE);
+  
+  SPI_Flash_Init();
+  SPI_Flash_Write((u8 *)p,0x100,strlen(p)+1);
+  SPI_Flash_Read(buf,0x100,strlen(p)+1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -113,6 +124,10 @@ int main(void)
 	if(key == KEY1_OK) LED5 = !LED5;  
 	else if(key == KEY2_OK) LED6 = !LED6;  
 	else if(key == KEY3_OK) BUZZER1 = !BUZZER1;
+	
+	printf("0x%x\r\n",SPI_FLASH_TYPE);
+	printf("%s",buf);
+	HAL_Delay(500);
 	
     if(USART_RX_STA&(0x01<<15))  //如果接收完成
 	{					   
@@ -126,7 +141,7 @@ int main(void)
 	//如果接收没完成,接收完成了时候需要发送数据会上位机,所以下面的任务在没完成时处理比较好
 	else  
 	{
-		times++;
+		times++;  //time++很慢，后面都基本很长时间才能看到
 		if(times%5000==0)
 		{
 			printf("\r\n等的牙都长了\r\n");

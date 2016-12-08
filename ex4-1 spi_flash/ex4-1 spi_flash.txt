@@ -1,6 +1,6 @@
 Configuration	ex4-1 spi_flash
-STM32CubeMX 	4.17.0
-Date	12/06/2016
+STM32CubeMX 	4.18.0
+Date	12/08/2016
 MCU	STM32F407ZGTx
 
 
@@ -44,7 +44,7 @@ SOFTWARE PROJECT
 
 Project Settings : 
 Project Name : ex4-1 spi_flash
-Project Folder : D:\Works\M4_HAL_Works\ex4-1 spi_flash
+Project Folder : D:\Git_Repository\GitHub\M4_HAL_Works\ex4-1 spi_flash
 Toolchain / IDE : MDK-ARM V5
 Firmware Package Name and Version : STM32Cube FW_F4 V1.13.1
 

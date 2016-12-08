@@ -43,7 +43,7 @@
 #include "main.h"
 
 /* USER CODE BEGIN Includes */
-
+#include "MyTypeDef.h"
 /* USER CODE END Includes */
 
 extern SPI_HandleTypeDef hspi1;
@@ -57,7 +57,7 @@ extern void Error_Handler(void);
 void MX_SPI1_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-
+u8 SPI1_ReadWriteByte(u8 _data);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus
