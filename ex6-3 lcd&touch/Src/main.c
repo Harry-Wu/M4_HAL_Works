@@ -58,7 +58,9 @@
 @Version: V1.0
 @Date: 2016-12-23
 @History: 
-		V1.0: 参考ex9-1工程		
+		V1.1: 加入触摸屏校准功能,校准程序目前是校准失败会再次校准,没有超次处理. 也加入了
+    绘图程序, 但是main函数中的延时没有去掉. 下一版解决上述问题.
+    V1.0: 参考ex9-1工程		
 		
 		
 *****************************************************************************/
@@ -105,7 +107,7 @@ int main(void)
 	
 	u8 t;
 	u8 tbuf[40];
-	_TOUCH_TYPEDEF touch_add;
+	_TOUCH_COOR_TYPEDEF touch_add;
 //	u8 len;  //获取接收到的字节数
 //	#define USART_REC_LEN  			200  	//定义最大接收字节数 200
 //	u8 rec_data_buf[USART_REC_LEN];
@@ -126,7 +128,7 @@ int main(void)
   MX_USART1_UART_Init();
   MX_SPI1_Init();
   MX_RTC_Init();
-  MX_IWDG_Init();
+  //MX_IWDG_Init();
 
   /* USER CODE BEGIN 2 */
 	delay_init(21);  //确定systime timer的时钟,单位MHz
@@ -138,8 +140,14 @@ int main(void)
   SPI_Flash_Init();
 	lcd_init();
 	
+	if(touch_adj()) LCD_ShowString(20,160,"TOUCH ADJUST PASS!",0);
+	delay_ms(500);
+	delay_ms(500);
+	
   SPI_Flash_Write((u8 *)p,0x100,strlen(p)+1);
   SPI_Flash_Read(buf,0x100,strlen(p)+1);
+	
+	MX_IWDG_Init();
 	
 	Draw_Circle(120,160,100);
 	LCD_DrawLine(0,0,239,319);
@@ -238,6 +246,16 @@ int main(void)
 		HAL_Delay(500);   
 	} 
 	//delay_ms(500); //1s以内需喂狗,如果加上这个延时whil(1)循环就会超过1s,从而导致喂狗不及时
+	
+	//以下为绘图程序
+	CNV_touch2lcd(&touch_add);
+	if(touch_add.x!=0xffff)
+	{
+		LCD_DrawPoint(touch_add.x,touch_add.y);
+		LCD_DrawPoint(touch_add.x+1,touch_add.y);
+		LCD_DrawPoint(touch_add.x,touch_add.y+1);
+		LCD_DrawPoint(touch_add.x+1,touch_add.y+1);
+	}
 	
 	get_touch_ad_filled(&touch_add);
 	printf("x = %4d y = %4d\r\n", touch_add.x, touch_add.y);

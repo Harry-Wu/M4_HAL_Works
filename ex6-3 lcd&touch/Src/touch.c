@@ -1,6 +1,7 @@
 #include "stm32f4xx.h"
 #include "touch.h"
 #include "delay.h"
+#include "lcd.h"
 
 /****************************
 //端口设置已在GPIO中设置过了
@@ -85,7 +86,7 @@ u16 get_touch_ad(u8 common)
 	return _data;
 }
 
-void get_touch_ad_filled(_TOUCH_TYPEDEF *p)
+void get_touch_ad_filled(_TOUCH_COOR_TYPEDEF *p)
 {
 	u8 i,j;
 	u16 buf[10],a;  //a用来临时存放较大值和总和
@@ -135,4 +136,142 @@ void get_touch_ad_filled(_TOUCH_TYPEDEF *p)
 		a+= buf[i];
 	}
 	p->y = a/8;
+}
+
+//画十字
+void LCD_DrawCross(u16 x, u16 y, u16 len)
+{
+	LCD_DrawLine(x-len/2,y,x+len/2,y);
+	LCD_DrawLine(x,y-len/2,x,y+len/2);
+}
+
+_TOUCH_ADJ_TYPEDEF touch_adj_parm;
+
+u8 touch_adj(void)
+{
+	_TOUCH_COOR_TYPEDEF touch[4];
+	float f1, f2;
+	READJ:
+	LCD_DrawCross(20, 20, 10);  //在LCD上画第一个点
+	while(T_PEN);     					 //等待触摸屏被按下  
+	get_touch_ad_filled(&touch[0]);	//获取触摸坐标
+	while(T_PEN==0);			//等待触摸屏被释放
+	
+	POINT_COLOR=BACK_COLOR;
+	LCD_DrawCross(20,20, 10);  //清除LCD上第一个点
+	delay_ms(100);
+	
+	POINT_COLOR=BLACK;
+	LCD_DrawCross(239-20,20, 10);   					 //在LCD上画第2个点
+	while(T_PEN);     					 //等待触摸屏被按下  
+	get_touch_ad_filled(&touch[1]);	//获取触摸坐标
+	while(T_PEN==0);			//等待触摸屏被释放	
+	
+	POINT_COLOR=BACK_COLOR;
+	LCD_DrawCross(239-20,20, 10);   //清除LCD上第2个点
+	delay_ms(100);
+	
+	POINT_COLOR=BLACK;
+	LCD_DrawCross(20,319-20, 10);   					 //在LCD上画第3个点
+	while(T_PEN);     					 //等待触摸屏被按下  
+	get_touch_ad_filled(&touch[2]);	//获取触摸坐标
+	while(T_PEN==0);			//等待触摸屏被释放
+	
+	POINT_COLOR=BACK_COLOR;
+	LCD_DrawCross(20,319-20, 10);    //清除LCD上第3个点
+	delay_ms(100);
+		
+	POINT_COLOR=BLACK;
+	LCD_DrawCross(239-20,319-20, 10);   					 //在LCD上画第4个点
+	while(T_PEN);     					 //等待触摸屏被按下  
+	get_touch_ad_filled(&touch[3]);	//获取触摸坐标
+	while(T_PEN==0);			//等待触摸屏被释放
+	
+	POINT_COLOR=BACK_COLOR;
+	LCD_DrawCross(239-20,319-20, 10);    //清除LCD上第4个点
+	POINT_COLOR=BLACK;
+	
+	//验证触点是否准确
+	//第1 2两点间触摸屏距离的平方
+	f1=(touch[1].x - touch[0].x)*(touch[1].x - touch[0].x)
+		+(touch[1].y - touch[0].y)*(touch[1].y - touch[0].y);
+	
+	//第3 4两点间触摸屏距离的平方
+	f2=(touch[3].x - touch[2].x)*(touch[3].x - touch[2].x)
+		+(touch[3].y - touch[2].y)*(touch[3].y - touch[2].y);
+		
+	if(f1/f2>1.1f  || f1/f2<0.9f)
+	{
+		goto READJ;
+	}
+		
+	//第1 3两点间触摸屏距离的平方
+	f1=(touch[2].x - touch[0].x)*(touch[2].x - touch[0].x)
+		+(touch[2].y - touch[0].y)*(touch[2].y - touch[0].y);
+	
+	//第2 4两点间触摸屏距离的平方
+	f2=(touch[3].x - touch[1].x)*(touch[3].x - touch[1].x)
+		+(touch[3].y - touch[1].y)*(touch[3].y - touch[1].y);
+		
+	if(f1/f2>1.1f  || f1/f2<0.9f)  //精度允许误差10%, 如果误差偏大,则返回重新校准
+	{
+		goto READJ;
+	}
+			
+	//第1 4两点间触摸屏距离的平方
+	f1=(touch[3].x - touch[0].x)*(touch[3].x - touch[0].x)
+		+(touch[3].y - touch[0].y)*(touch[3].y - touch[0].y);
+	
+	//第2 2两点间触摸屏距离的平方
+	f2=(touch[2].x - touch[1].x)*(touch[2].x - touch[1].x)
+		+(touch[2].y - touch[1].y)*(touch[2].y - touch[1].y);
+		
+	if(f1/f2>1.1f  || f1/f2<0.9f)  //精度允许误差10%
+	{
+		goto READJ;
+	}
+			
+	/********************************************************
+	//找LCD跟触摸屏对应关系
+	//触摸屏坐标跟LCD坐标关系：
+
+	//公式：lcd_x=fx*touch_x+xoffset;
+	//lcd_x：		某点对应lcd X坐标
+	//touch_x：	某点对应触摸屏 X坐标
+	//fx：			比例系数
+	//xoffset：		偏移量
+
+	//列方程求比例系数和偏移量
+	//20 =fx*touchxy[0].x+xoffset
+	//220=fx*touchxy[1].x+xoffset
+
+	//fx=((240-20) -20)/(touchxy[1].x-touchxy[0].x)
+	//xoffset=20-fx*touchxy[0].x
+	************************************************************/
+	//x方向比例系数
+	touch_adj_parm.fx = (float)(239-20 - 20)/(touch[1].x - touch[0].x);
+	//x方向偏移量
+	touch_adj_parm.x_offset = 20 - touch_adj_parm.fx * touch[0].x;
+	
+	//y方向比例系数
+	touch_adj_parm.fy=(float)(319-20 - 20)/(touch[2].y - touch[0].y);
+	//y方向偏移量
+	touch_adj_parm.y_offset=20 - touch_adj_parm.fy * touch[0].y;
+	
+	return TOUCH_ADJ_OK;
+}
+
+void CNV_touch2lcd(_TOUCH_COOR_TYPEDEF *p)
+{
+	if(T_PEN==0)   //触摸屏有被按下
+	{
+		get_touch_ad_filled(p);
+		p->x=touch_adj_parm.fx * p->x +touch_adj_parm.x_offset;
+		p->y=touch_adj_parm.fy * p->y +touch_adj_parm.y_offset;
+	}
+	else
+	{
+		p->x=0xffff;
+		p->y=0xffff;
+	}
 }

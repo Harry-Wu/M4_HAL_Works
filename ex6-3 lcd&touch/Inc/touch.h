@@ -12,16 +12,32 @@
 #define CMD_RDX 0XD0
 #define CMD_RDY 0X90
 
-//记录x,y轴数值结构体
+#define TOUCH_ADJ_OK   1
+#define TOUCH_ADJ_FAIL 0
+
+//保存触摸屏的x,y坐标
 typedef struct {
 	u16 x;
 	u16 y;
-}_TOUCH_TYPEDEF;
+}_TOUCH_COOR_TYPEDEF;
+
+//保存比例系数fx,fy和偏移量x_offset,y_offset
+typedef struct
+{
+	float fx;
+	s16 x_offset;
+	float fy;
+	s16 y_offset;
+}_TOUCH_ADJ_TYPEDEF;
 
 
+extern _TOUCH_ADJ_TYPEDEF touch_adj_parm;
 
 //void touch_init(void);
 u16 get_touch_ad(u8 common);
-void get_touch_ad_filled(_TOUCH_TYPEDEF *p);
+void get_touch_ad_filled(_TOUCH_COOR_TYPEDEF *p);
+
+u8 touch_adj(void);
+void CNV_touch2lcd(_TOUCH_COOR_TYPEDEF *p);
 
 #endif
