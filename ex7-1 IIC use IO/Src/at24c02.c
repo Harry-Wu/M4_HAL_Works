@@ -110,7 +110,7 @@ u8 at24c02_read_bytes(u16 addr, u8 num, u8 *p)
 //返回值:错误类型
 u8 at24c02_write_bytes(u16 addr, u8 num, u8 *p)
 {
-	u8 i;
+	//u8 i;
 	u16 less_addr;
 	while(1)
 		{
@@ -149,6 +149,7 @@ u8 at24c02_write_bytes(u16 addr, u8 num, u8 *p)
 		//
 		addr += less_addr;
 		num = num-less_addr; 
-		return ACK_OK;
+		//return ACK_OK;
 	}
+	return ACK_OK;
 }
