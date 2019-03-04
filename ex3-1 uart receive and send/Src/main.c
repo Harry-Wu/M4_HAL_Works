@@ -119,6 +119,7 @@ int main(void)
 	//rec_data=USART_ReceiveData (USART1); //读取数据
 	while(__HAL_UART_GET_FLAG(&huart1, UART_FLAG_TC)==RESET);  //等待上次发送完毕
 	//while(USART_GetFlagStatus(USART1,USART_FLAG_TXE)==RESET); //等待上次发送完毕
+	//printf("\r\nThe message you send is:\r\n");
 	printf("\r\n您发送的消息为:\r\n");
 	HAL_UART_Transmit(&huart1,rec_data_buf,huart1.RxXferSize-huart1.RxXferCount-1,100);      //发送数据, huart1.RxXferSize-huart1.RxXferCount-1, 根据接收到的数据长度,来决定输出多少字节数据
 	

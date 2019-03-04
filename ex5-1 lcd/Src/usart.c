@@ -54,7 +54,12 @@ u16 USART_RX_STA=0;       //接收状态标记，类似寄存器,某一位或几位标志一种状态
 //加入以下代码,支持printf函数,而不需要选择use MicroLIB	  
 //#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)	
 #if 1
-#pragma import(__use_no_semihosting)             
+/********************************************************
+下面的代码会重复定义__FILE结构体，与stdio.h里面的定义重复，固去掉，
+注意在Option of target里面把microLIB选上即可
+
+//#pragma import(__use_no_semihosting)
+__asm(".global __use_no_semihosting\n");
 //标准库需要的支持函数                 
 struct __FILE 
 { 
@@ -67,6 +72,8 @@ void _sys_exit(int x)
 { 
 	x = x; 
 } 
+**********************************************************/
+
 //重定义fputc函数 
 int fputc(int ch, FILE *f)
 { 	

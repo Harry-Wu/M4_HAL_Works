@@ -40,8 +40,10 @@
 /* USER CODE BEGIN Includes */
 /*****************************************************************************
 @File name:  
-@Description: spi读取W25Q64的id信息, 通过串口打印出来
-			  uart1用中断方式接收数据,再发回给pc 
+@Description: spi读取W25Q64的id信息, 通过串口打印出来，然后再将存到flash 0x100
+			  位置的字符串打印出来，uart1用中断方式接收数据,再发回给pc。
+			  串口回传字符处理函数是中断里处理的，所以有数据接收到会马上回传。
+			  
 @Author: Harry Wu
 @Version: V1.0
 @Date: 2016-12-06
@@ -84,6 +86,7 @@ int main(void)
   /* USER CODE BEGIN 1 */
 	u8 key;
 	u16 times=0;
+	//u8 p[]="hello world!!! Harry\r\n";
 	u8 *p="hello world!!! Harry\r\n";
 	u8 buf[100];
 //	u8 len;  //获取接收到的字节数
@@ -112,8 +115,8 @@ int main(void)
   HAL_UART_Receive_IT(&huart1, (u8 *)aRxBuffer, RXBUFFERSIZE);
   
   SPI_Flash_Init();
-  SPI_Flash_Write((u8 *)p,0x100,strlen(p)+1);
-  SPI_Flash_Read(buf,0x100,strlen(p)+1);
+  SPI_Flash_Write((u8 *)p,0x100,strlen(p)+1);  //把p字符串写到0x100地址那里
+  SPI_Flash_Read(buf,0x100,strlen(p)+1);  //将0x100地址的内容读取到buf数组中
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -125,9 +128,9 @@ int main(void)
 	else if(key == KEY2_OK) LED6 = !LED6;  
 	else if(key == KEY3_OK) BUZZER1 = !BUZZER1;
 	
-	printf("0x%x\r\n",SPI_FLASH_TYPE);
-	printf("%s",buf);
-	HAL_Delay(500);
+	printf("FLASH的ID为：0x%x\r\n",SPI_FLASH_TYPE);
+	printf("存到0x100地址的字符串为：%s",buf);
+	HAL_Delay(1000);  //这个会影响UART1串口的字符串处理
 	
     if(USART_RX_STA&(0x01<<15))  //如果接收完成
 	{					   
@@ -147,8 +150,8 @@ int main(void)
 			printf("\r\n等的牙都长了\r\n");
 			//printf("正点原子@ALIENTEK\r\n\r\n\r\n");
 		}
-		if(times%200==0)printf("请输入数据,以回车键结束\r\n");  
-		if(times%30==0)LED5=!LED5;//闪烁LED,提示系统正在运行.
+		if(times%200==0) printf("请输入数据,以回车键结束\r\n");  
+		if(times%30==0) LED5=!LED5;//闪烁LED,提示系统正在运行.
 		HAL_Delay(10);   
 	} 
 

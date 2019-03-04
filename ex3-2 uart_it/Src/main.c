@@ -126,13 +126,13 @@ int main(void)
 	else  
 	{
 		times++;
-		if(times%5000==0)
+		if(times%3000==0)
 		{
-			printf("\r\n等的牙都长了\r\n");
+			printf("\r\n等的牙都长了！\r\n");
 			//printf("正点原子@ALIENTEK\r\n\r\n\r\n");
 		}
-		if(times%200==0)printf("请输入数据,以回车键结束\r\n");  
-		if(times%30==0)LED5=!LED5;//闪烁LED,提示系统正在运行.
+		if(times%500==0)printf("请输入数据,以回车键结束（如无回车键，信息不会回传）：\r\n");  
+		if(times%100==0)LED5=!LED5;//闪烁LED,提示系统正在运行.
 		HAL_Delay(10);   
 	} 
 

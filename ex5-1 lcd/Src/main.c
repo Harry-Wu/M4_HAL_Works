@@ -42,14 +42,16 @@
 @File name:  
 @Description:
 	- 控制ILI9341驱动的2.8寸显示屏，在屏幕上显示ascii字符和汉字(数组方式存储). 	
-	- spi读取W25Q64的id信息, 通过串口打印出来
+	- spi读取W25Q64的id信息, 通过串口打印出来（每5s打印一次）
+	- 每隔5s提示输入数据（以回车判断字符串是否发送完毕）
 	- uart1用中断方式接收数据,再发回给pc
 @Hardware: 				
 @Author: Harry Wu
-@Version: V1.0
+@Version: V1.1
 @Date: 2016-12-13
 @History: 
-		V1.0: 程序移植自"ex7-4 - lcd CHS"
+		V1.0 20161213: 程序移植自"ex7-4 - lcd CHS"
+		V1.1 20190223：调整时间
 		
 *****************************************************************************/
 #include "MyTypeDef.h"
@@ -165,9 +167,7 @@ int main(void)
 	else if(key == KEY2_OK) LED6 = !LED6;  
 	else if(key == KEY3_OK) BUZZER1 = !BUZZER1;
 	
-	printf("0x%x\r\n",SPI_FLASH_TYPE);
-	printf("%s",buf);
-	//HAL_Delay(500);
+	
 	
     if(USART_RX_STA&(0x01<<15))  //如果接收完成
 	{					   
@@ -182,14 +182,21 @@ int main(void)
 	else  
 	{
 		times++;  //time++很慢，后面都基本很长时间才能看到
-		if(times%100==0)
+		if(times%30==0)
 		{
-			printf("\r\n等的牙都长了\r\n");
+			printf("\r\n等的牙都长了！\r\n");
 			//printf("正点原子@ALIENTEK\r\n\r\n\r\n");
 		}
-		if(times%4==0)printf("请输入数据,以回车键结束\r\n");  
+		if(times%5==0)  //5s打印一次
+		{
+			printf("请输入数据,以回车键结束（如无回车键，信息不会回传）\r\n");
+			printf("0x%x\r\n",SPI_FLASH_TYPE);
+			printf("%s",buf);  
+		}
 		if(times%2==0)LED5=!LED5;//闪烁LED,提示系统正在运行.
-		HAL_Delay(500);   
+		
+		//HAL_Delay(1000);
+		HAL_Delay(1000); //延时5s   
 	} 
 
   /* USER CODE END WHILE */

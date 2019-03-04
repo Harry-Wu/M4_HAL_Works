@@ -1,0 +1,87 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: ¦ÌVision V5.26.2.0
+Copyright (C) 2018 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: Harry Wu, LDS, LIC=GE7EV-P68FN-F1NPT-R29F7-7IGFZ-MG5WL
+ 
+Tool Versions:
+Toolchain:       MDK-ARM Professional  Version: 5.26.2.0
+Toolchain Path:  d:\Keil_v5\ARM\ARMCLANG\Bin
+C Compiler:      ArmClang.exe V6.10.1
+Assembler:       Armasm.exe V6.10.1
+Linker/Locator:  ArmLink.exe V6.10.1
+Library Manager: ArmAr.exe V6.10.1
+Hex Converter:   FromElf.exe V6.10.1
+CPU DLL:         SARMCM3.DLL V5.26.2.0
+Dialog DLL:      DCM.DLL V1.17.2.0
+Target DLL:      STLink\ST-LINKIII-KEIL_SWO.dll V3.0.5.0
+Dialog DLL:      TCM.DLL V1.36.1.0
+ 
+<h2>Project:</h2>
+D:\Git_Repository\GitHub\M4_HAL_Works\ex5-1 lcd\MDK-ARM\ex5-1 lcd.uvprojx
+Project File Date:  02/23/2019
+
+<h2>Output:</h2>
+*** Using Compiler 'V6.10.1', folder: 'd:\Keil_v5\ARM\ARMCLANG\Bin'
+Build target 'ex5-1 lcd'
+../Src/main.c(93): warning: initializing 'u8 *' (aka 'unsigned char *') with an expression of type 'char [23]' converts between pointers to integer types with different sign [-Wpointer-sign]
+        u8 *p="hello world!!! Harry\r\n";
+            ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~
+../Src/main.c(123): warning: passing 'u8 *' (aka 'unsigned char *') to parameter of type 'const char *' converts between pointers to integer types with different sign [-Wpointer-sign]
+  SPI_Flash_Write((u8 *)p,0x100,strlen(p)+1);
+                                       ^
+d:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h(335): note: passing argument to parameter here
+extern _ARMABI size_t strlen(const char * /*s*/) __attribute__((__nonnull__(1)));
+                                               ^
+../Src/main.c(124): warning: passing 'u8 *' (aka 'unsigned char *') to parameter of type 'const char *' converts between pointers to integer types with different sign [-Wpointer-sign]
+  SPI_Flash_Read(buf,0x100,strlen(p)+1);
+                                  ^
+d:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h(335): note: passing argument to parameter here
+extern _ARMABI size_t strlen(const char * /*s*/) __attribute__((__nonnull__(1)));
+                                               ^
+../Src/main.c(154): warning: passing 'char [20]' to parameter of type 'u8 *' (aka 'unsigned char *') converts between pointers to integer types with different sign [-Wpointer-sign]
+        LCD_ShowString(80,160,"hello, how are you?",0);
+                              ^~~~~~~~~~~~~~~~~~~~~
+../Inc\lcd.h(66): note: passing argument to parameter 'p' here
+void LCD_ShowString(u16 x, u16 y, u8 *p, u8 mode);
+                                      ^
+../Src/main.c(187): warning: illegal character encoding in string literal [-Winvalid-source-encoding]
+                        printf("\r\n<B5><U+0235><C4><D1><C0><B6><BC><B3><A4><C1><U+02E3><A1>\r\n");
+                                    ^~~~        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~        ~~~~
+../Src/main.c(192): warning: illegal character encoding in string literal [-Winvalid-source-encoding]
+                        printf("<C7><EB><CA><E4><C8><EB><CA><FD><BE><DD>,<D2><U+053B><U+0633><B5><BC><FC><BD><E1><CA><F8><A3><A8><C8><E7><CE><U+07BB><U+0633><B5><BC><FC><A3><AC><D0><C5><U+03E2><B2><BB><BB><E1><BB><U+0634><AB><A3><A9>\r\n");
+                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ~~~~                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~        ~~~~~~~~~~~~~~~~~~~~        ~~~~~~~~~~~~
+6 warnings generated.
+compiling main.c...
+linking...
+Program Size: Code=9384 RO-data=2056 RW-data=16 ZI-data=5488  
+"ex5-1 lcd\ex5-1 lcd.axf" - 0 Error(s), 6 Warning(s).
+
+<h2>Software Packages used:</h2>
+
+Package Vendor: ARM
+                http://www.keil.com/pack/ARM.CMSIS.5.4.0.pack
+                ARM.CMSIS.5.4.0
+                CMSIS (Cortex Microcontroller Software Interface Standard)
+   * Component: CORE Version: 5.1.2
+
+Package Vendor: Keil
+                http://www.keil.com/pack/Keil.STM32F4xx_DFP.2.13.0.pack
+                Keil.STM32F4xx_DFP.2.13.0
+                STMicroelectronics STM32F4 Series Device Support, Drivers and Examples
+
+<h2>Collection of Component include folders:</h2>
+  .\RTE\_ex5-1_lcd
+  d:\Keil_v5\ARM\PACK\ARM\CMSIS\5.4.0\CMSIS\Core\Include
+  d:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include
+
+<h2>Collection of Component Files used:</h2>
+
+   * Component: ARM::CMSIS:CORE:5.1.2
+Build Time Elapsed:  00:00:01
+</pre>
+</body>
+</html>
